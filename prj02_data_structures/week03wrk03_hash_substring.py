@@ -1,13 +1,8 @@
 # python3
 
-""" TODO:
-1.  Check tips from the task
-2. Agorithm works incorrectly, find the problem
-"""
-
 
 def read_input():
-    return (input().rstrip(), input().rstrip())
+    return input().rstrip(), input().rstrip()
 
 
 def print_occurrences(output):
@@ -23,24 +18,24 @@ def get_occurrences_naive(pattern, text):
 
 
 def polyhash(string, x, prime):
-    bucket_count = 1000
+    # bucket_count = 1000
     ans = 0
     for s in reversed(string):
-        ans = (ans * x + ord(s)) % prime
-    return ans % bucket_count
+        ans = ((ans * x + ord(s)) % prime + prime) % prime
+    return ans #% bucket_count
 
 
 def precompute_hashes(text, pattern_len, prime, x):
     text_len = len(text)
-    # pattern_len = len(pattern)
-    hashes = [None] * (len(text) - pattern_len + 1)
-    S = text[text_len - pattern_len:text_len - 1]
+    hashes = [None] * (text_len - pattern_len + 1)
+    S = text[text_len - pattern_len:text_len]
     hashes[text_len - pattern_len] = polyhash(S, x, prime)
     y = 1
-    for i in range(1, pattern_len+1):
-        y = (y * x) % prime
+    for i in range(pattern_len):
+        y = ((y * x) % prime + prime) % prime
     for i in range(text_len - pattern_len - 1, -1, -1):
-        hashes[i] = (x * hashes[i + 1] + ord(text[i]) - y * ord(text[i + pattern_len])) % prime
+
+        hashes[i] = ((x * hashes[i + 1] + ord(text[i]) - y * ord(text[i + pattern_len])) % prime + prime) % prime
     return hashes
 
 
@@ -57,10 +52,14 @@ def get_occurrences(pattern, text):
     result = []
     phash = polyhash(pattern, x, prime)
     hashes = precompute_hashes(text, pattern_len, prime, x)
-    for i in range(0, len(text) - pattern_len):
+    # print([ord(x) for x in pattern])
+    # print([ord(x) for x in text])
+    # print(hashes)
+    for i in range(0, len(text) - pattern_len+1):
+        # print(f"{pattern}={text[i:i + pattern_len]} {phash}={hashes[i]}")
         if phash != hashes[i]:
             continue
-        elif pattern == text[i:i + pattern_len - 1]:
+        elif pattern == text[i:i + pattern_len]:
             result.append(i)
     return result
 
@@ -94,5 +93,3 @@ baaaaaaa
 output:
 1 2 3
 """
-
-
