@@ -5,9 +5,9 @@ Website of the specialistion: https://www.coursera.org/specializations/data-stru
 
 The spacialisation consists of the following courses:
 
-Algorithimc Toolbox (done)
-Data Structures (in progress)
-Algorithms on Graphs
-Algorithms on Strings
-Advanced Algorithms and Complexity
-Genome Assembly Programming Challenge
+1. Algorithimc Toolbox (done)
+2. Data Structures (in progress)
+3. Algorithms on Graphs
+4. Algorithms on Strings
+5. Advanced Algorithms and Complexity
+6. Genome Assembly Programming Challenge
