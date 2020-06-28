@@ -6,7 +6,7 @@ Website of the specialistion: https://www.coursera.org/specializations/data-stru
 The spacialisation consists of the following courses:
 
 1. Algorithimc Toolbox (done). The most imnteresting algorithms:
-- Modified QuickSort that solves some disadvantges of the classic QuickSort algorythm: https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj01_algorithmic_toolbox/week04wrk03_quick3.py
+- Modified QuickSort that solves some disadvantges of the classic QuickSort algorithm: https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj01_algorithmic_toolbox/week04wrk03_quick3.py
 - edit distance using dynamic programming https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj01_algorithmic_toolbox/week05wrk03_edit_distance.py
 - placing paretheses to maximise arythmetic expression https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj01_algorithmic_toolbox/week06wrk03_placing_parentheses.py
 - fast implementation of the algorithm that finds two points with minimal distance: https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj01_algorithmic_toolbox/week04wrk06_closest_points_reccursive.py
