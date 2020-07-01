@@ -10,9 +10,11 @@ The spacialisation consists of the following courses:
 - edit distance using dynamic programming https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj01_algorithmic_toolbox/week05wrk03_edit_distance.py
 - placing paretheses to maximise arythmetic expression https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj01_algorithmic_toolbox/week06wrk03_placing_parentheses.py
 - fast implementation of the algorithm that finds two points with minimal distance: https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj01_algorithmic_toolbox/week04wrk06_closest_points_reccursive.py
+- longest common substring using dynamic programming: https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj01_algorithmic_toolbox/week05wrk04_lcs2.py
 2. Data Structures (in progress). The most interesting algorithms:
 - Hash table implementation https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj02_data_structures/week03wrk02_hash_chains.py
 - substring search using hashing (Rabin-Karp algorithm) https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj02_data_structures/week03wrk03_hash_substring.py
+- longest common substring using hashing: https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj02_data_structures/week03wrk05_common_substring.py
 3. Algorithms on Graphs
 4. Algorithms on Strings
 5. Advanced Algorithms and Complexity
