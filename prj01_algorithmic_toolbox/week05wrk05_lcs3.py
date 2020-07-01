@@ -44,6 +44,7 @@ if __name__ == '__main__':
     _ = input()
     s3 = input().split()
     print(lcs3(s1, s2, s3))
+
 """
 3
 1 2 3
