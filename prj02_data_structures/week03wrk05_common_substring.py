@@ -95,6 +95,23 @@ def get_common_substring(text1, text2):
     # https://www.coursera.org/learn/data-structures/discussions/weeks/3/threads/O0VDK7KqEemMUQoC5G__rA
     pass
 
+
+"""
+Suppose you are given 2 string "aaaaa" & "aaa" , maximum it would be possible that smaller string is completely a common substring like in case above and that the idea we use.
+
+So we fix left=0 and right=min(string_A, string_B) = 3
+
+mid = 1 i.e (left+right)/2
+
+Now you try to find substring of length mid using hash. If it succeed, that mean we can at-least have a common substring of length 2,Lets see if we can get better , so in binary search because the substring search returned true left = mid + 1 and doing that we get mid =2, Repeat same process , and you will see SubStringSearch will still return , so again try i.e. now mid =3 and it will again succeed and like that we keep doing until left <=right
+
+SubStringSearch is a function which you have write that compute hash for each substring of length and for each index and then compare with other string 2.
+
+And all this have to be done fast, like you compute hash once and as explained in Problem 3 , you can use it to create hash for other index.
+
+
+"""
+
 """
 def _binary_search(self):
     l = 0
