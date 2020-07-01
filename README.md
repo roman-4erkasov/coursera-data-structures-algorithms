@@ -13,6 +13,7 @@ The spacialisation consists of the following courses:
 2. Data Structures (in progress). The most interesting algorithms:
 - Hash table implementation https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj02_data_structures/week03wrk02_hash_chains.py
 - substring search using hashing (Rabin-Karp algorithm) https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj02_data_structures/week03wrk03_hash_substring.py
+- longest common substring using hashing: https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj02_data_structures/week03wrk05_common_substring.py
 3. Algorithms on Graphs
 4. Algorithms on Strings
 5. Advanced Algorithms and Complexity
