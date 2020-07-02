@@ -86,6 +86,57 @@ def test_contains():
     )
 
 
+def
+
+
+def contains_common_substring(text_1, text_2, pattern_len, primes, x, verbose=False):
+    """
+    check if text contains pattern
+
+    :param text: text
+    :param pattern: substring
+    :param primes: list of prime number to generate different hashes
+    :param x: argument of polynoms for polyhash function
+    :return: True if text cntains substring, otherwise False
+    """
+    # pattern_len = len(pattern)
+    result = False
+    # p_hashes = [
+    #     polyhash(pattern, prime, x)
+    #     for prime in primes
+    # ]
+
+    lil_hashes_1 = [
+        precompute_hashes(text_1, pattern_len, prime, x)
+        for prime in primes
+    ]
+    lil_hashes_2 = [
+        precompute_hashes(text_2, pattern_len, prime, x)
+        for prime in primes
+    ]
+
+    if verbose:
+        print(f"lil_hashes:  {lil_hashes_1})\n  {lil_hashes_2}")
+
+    for hashes_1, hashes_2 in zip(lil_hashes_1, lil_hashes_2):
+        index_1 = 0
+        index_2 = 0
+        for index in range(min(len(text_1), len(text_2))):
+            if hashes_1[index] == hashes_2[index]:
+
+
+    for i in range(0, len(text) - pattern_len + 1):
+        eq = True
+        for p_hash, hashes in zip(p_hashes, lil_hashes):
+            if p_hash != hashes[i]:
+                eq = False
+                break
+        if eq:
+            result = True
+            break
+    return result
+
+
 test_contains()
 
 
@@ -93,7 +144,12 @@ def get_common_substring(text1, text2):
     # TODO: binary search common substring
     # https://www.quora.com/How-do-I-use-rolling-hash-and-binary-search-to-find-the-longest-common-sub-string
     # https://www.coursera.org/learn/data-structures/discussions/weeks/3/threads/O0VDK7KqEemMUQoC5G__rA
-    pass
+    left = 0
+    right = min(len(text1), len(text2))
+
+    while left<right:
+        mid = left + (right-left)//2
+        if contains()
 
 
 """
@@ -130,6 +186,8 @@ def _binary_search(self):
 
 # prime1 = 10 ** 9 + 7
 # prime2 = 10 ** 9 + 9
+prime1 = 1000000007
+prime2 = 1000004249
 # x = random.randint(1, 10 ** 9)
 #
 #

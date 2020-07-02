@@ -57,6 +57,7 @@ def get_occurrences(pattern, text):
     # print(hashes)
     for i in range(0, len(text) - pattern_len+1):
         # print(f"{pattern}={text[i:i + pattern_len]} {phash}={hashes[i]}")
+
         if phash != hashes[i]:
             continue
         elif pattern == text[i:i + pattern_len]:
