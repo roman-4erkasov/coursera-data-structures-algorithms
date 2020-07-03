@@ -17,11 +17,10 @@ def solve_naive(s, t):
 
 
 def polyhash(string, prime, x):
-    # bucket_count = 1000
     ans = 0
     for s in reversed(string):
         ans = ((ans * x + ord(s)) % prime + prime) % prime
-    return ans  # % bucket_count
+    return ans
 
 
 def precompute_hashes(text, pattern_len, prime, x):
@@ -98,8 +97,6 @@ class IntDict:
         self.a = random.randint(1, self.bucket_count - 1)
         self.b = random.randint(0, self.bucket_count - 1)
         self.data = [[] for _ in range(self.bucket_count)]
-        # if values is not None:
-        #     self.multiple_add(values)
 
     @staticmethod
     def __safe_modulo(value, modulus):
@@ -141,28 +138,15 @@ class IntDict:
         h = self.get_hash(key)
         found = False
         for i, (k, v) in enumerate(self.data[h]):
-            # k, v = pair
             if key == k:
                 found = True
                 self.data[h][i] = [key, value]
 
         if not found:
-            # print(f"append {key}, {value}")
             self.data[h].append([key, value])
-        # print(f"__setitem__:{found},h={h},key={key},v={value}")
 
-    # def add(self, value):
-    #     h = self.get_hash(value)
-    #     if value not in self.data[h]:
-    #         self.data[h].append(value)
-
-    # def multiple_add(self, values):
-    #     for value in values:
-    #         self.add(value)
 
     def __str__(self):
-        # return str(self.data)
-
         return "{" + " ".join([str(i) + ":" + str(x) for i, x in enumerate(self.data) if x]) + "}"
 
 
@@ -205,14 +189,7 @@ def get_common_substring(text_1, text_2, pattern_len, prime_1, prime_2, x, verbo
         hash_set_p1[hashes_t2_p1[i]] = i
         hash_set_p2[hashes_t2_p2[i]] = i
 
-    # print(hashes_t1_p1, hash_set_p1)
-    # print(hashes_t1_p2, hash_set_p2)
-
     for idx, (hash_p1, hash_p2) in enumerate(zip(hashes_t1_p1, hashes_t1_p2)):
-        # print(
-        #     f"h1[{hash_set_p1.get_hash(hash_p1)}]=({hash_p1},{hash_set_p1[hash_p1]}), "
-        #     f"h2[{hash_set_p2.get_hash(hash_p2)}]=({hash_p2},{hash_set_p2[hash_p2]})"
-        # )
         if hash_set_p1.exists(hash_p1) and hash_set_p2.exists(hash_p2):
             result = idx, hash_set_p1[hash_p1], pattern_len
             break
