@@ -86,23 +86,6 @@ def test_contains():
     )
 
 
-
-
-# test_contains()
-
-
-# def get_common_substring(text1, text2):
-#     # TODO: binary search common substring
-#     # https://www.quora.com/How-do-I-use-rolling-hash-and-binary-search-to-find-the-longest-common-sub-string
-#     # https://www.coursera.org/learn/data-structures/discussions/weeks/3/threads/O0VDK7KqEemMUQoC5G__rA
-#     left = 0
-#     right = min(len(text1), len(text2))
-#
-#     while left<right:
-#         mid = left + (right-left)//2
-#         if contains()
-
-
 class IntDict:
     """
     Hash Table that implemetns dict of integers
@@ -178,8 +161,6 @@ def test_int_set():
     h_table_1[3] = 1
 
     print(h_table_1)
-    # assert h_table_1[3] == True
-    # assert h_table_1[2] == False
 
 
 def get_common_substring(text_1, text_2, pattern_len, prime_1, prime_2, x, verbose=False):
@@ -220,29 +201,6 @@ def get_common_substring(text_1, text_2, pattern_len, prime_1, prime_2, x, verbo
             break
     return result
 
-
-    # # if verbose:
-    # #     print(f"lil_hashes:  {lil_hashes_1})\n  {lil_hashes_2}")
-    #
-    # f
-    #
-    # for hashes_1, hashes_2 in zip(lil_hashes_1, lil_hashes_2):
-    #     index_1 = 0
-    #     index_2 = 0
-    #     for index in range(min(len(text_1), len(text_2))):
-    #         if hashes_1[index] == hashes_2[index]:
-    #
-    #
-    # for i in range(0, len(text) - pattern_len + 1):
-    #     eq = True
-    #     for p_hash, hashes in zip(p_hashes, lil_hashes):
-    #         if p_hash != hashes[i]:
-    #             eq = False
-    #             break
-    #     if eq:
-    #         result = True
-    #         break
-    # return result
 
 
 
