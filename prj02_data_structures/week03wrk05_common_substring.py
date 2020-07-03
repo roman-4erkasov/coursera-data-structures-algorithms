@@ -79,7 +79,7 @@ def test_contains():
     prime2 = 10 ** 9 + 9
     x = random.randint(1, 10 ** 9)
     text = "ababaxbaba"
-    s = "axb"
+    s = "a"  # ""axb"
     print(
         f"{text} contains {s}:"
         f"{contains(text=text,pattern=s,primes=[prime1,prime2],x=x, verbose=True)}"
@@ -98,8 +98,8 @@ class IntDict:
         self.a = random.randint(1, self.bucket_count - 1)
         self.b = random.randint(0, self.bucket_count - 1)
         self.data = [[] for _ in range(self.bucket_count)]
-        if values is not None:
-            self.multiple_add(values)
+        # if values is not None:
+        #     self.multiple_add(values)
 
     @staticmethod
     def __safe_modulo(value, modulus):
@@ -111,7 +111,7 @@ class IntDict:
         """
         return (value % modulus + modulus) % modulus
 
-    def __hash(self, value):
+    def get_hash(self, value):
         """
         hash function from Universal Family
         :param value: integer value
@@ -121,39 +121,49 @@ class IntDict:
         return self.__safe_modulo(result, self.bucket_count)
 
     def exists(self, item: int):
-        h = self.__hash(item)
-        return item in self.data[h]
+        result = False
+        h = self.get_hash(item)
+        for k, v in self.data[h]:
+            if item == k:
+                result = True
+        return result
 
     def __getitem__(self, item: int):
-        h = self.__hash(item)
+        h = self.get_hash(item)
         result = None
         for i, (k, v) in enumerate(self.data[h]):
             if item == k:
                 result = v
+                break
         return result
 
-    def __setitem__(self, key:int, value):
-        h = self.__hash(value)
+    def __setitem__(self, key: int, value):
+        h = self.get_hash(key)
         found = False
-        for i, pair in enumerate(self.data[h]):
-            k, v = pair
+        for i, (k, v) in enumerate(self.data[h]):
+            # k, v = pair
             if key == k:
                 found = True
-                self.data[h][i] = v
+                self.data[h][i] = [key, value]
+
         if not found:
-            self.data[h].append((key, value))
+            # print(f"append {key}, {value}")
+            self.data[h].append([key, value])
+        # print(f"__setitem__:{found},h={h},key={key},v={value}")
 
-    def add(self, value):
-        h = self.__hash(value)
-        if value not in self.data[h]:
-            self.data[h].append(value)
+    # def add(self, value):
+    #     h = self.get_hash(value)
+    #     if value not in self.data[h]:
+    #         self.data[h].append(value)
 
-    def multiple_add(self, values):
-        for value in values:
-            self.add(value)
+    # def multiple_add(self, values):
+    #     for value in values:
+    #         self.add(value)
 
     def __str__(self):
-        return self.data
+        # return str(self.data)
+
+        return "{" + " ".join([str(i) + ":" + str(x) for i, x in enumerate(self.data) if x]) + "}"
 
 
 def test_int_set():
@@ -179,29 +189,34 @@ def get_common_substring(text_1, text_2, pattern_len, prime_1, prime_2, x, verbo
     result = None
     prime_3 = 1_000_000_007
 
-    if len(text_1)>len(text_2):
+    if len(text_1) > len(text_2):
         text_1, text_2 = text_2, text_1
 
-    lil_t1_p1 = precompute_hashes(text_1, pattern_len, prime_1, x)
-    lil_t1_p2 = precompute_hashes(text_1, pattern_len, prime_2, x)
+    hashes_t1_p1 = precompute_hashes(text_1, pattern_len, prime_1, x)
+    hashes_t1_p2 = precompute_hashes(text_1, pattern_len, prime_2, x)
 
-    lil_t2_p1 = precompute_hashes(text_2, pattern_len, prime_1, x)
-    lil_t2_p2 = precompute_hashes(text_2, pattern_len, prime_2, x)
+    hashes_t2_p1 = precompute_hashes(text_2, pattern_len, prime_1, x)
+    hashes_t2_p2 = precompute_hashes(text_2, pattern_len, prime_2, x)
 
     # primes that differ from prime of hash and differ from each other
     hash_set_p1 = IntDict(prime=prime_2)
     hash_set_p2 = IntDict(prime=prime_3)
-    for i in range(len(lil_t2_p1)):
-        hash_set_p1[i] = lil_t2_p1[i]
-        hash_set_p2[i] = lil_t2_p2[i]
+    for i in range(len(hashes_t2_p1)):
+        hash_set_p1[hashes_t2_p1[i]] = i
+        hash_set_p2[hashes_t2_p2[i]] = i
 
-    for idx,(hash_p1, hash_p2) in enumerate(zip(lil_t1_p1, lil_t1_p2)):
+    # print(hashes_t1_p1, hash_set_p1)
+    # print(hashes_t1_p2, hash_set_p2)
+
+    for idx, (hash_p1, hash_p2) in enumerate(zip(hashes_t1_p1, hashes_t1_p2)):
+        # print(
+        #     f"h1[{hash_set_p1.get_hash(hash_p1)}]=({hash_p1},{hash_set_p1[hash_p1]}), "
+        #     f"h2[{hash_set_p2.get_hash(hash_p2)}]=({hash_p2},{hash_set_p2[hash_p2]})"
+        # )
         if hash_set_p1.exists(hash_p1) and hash_set_p2.exists(hash_p2):
-            result = idx
+            result = idx, hash_set_p1[hash_p1], pattern_len
             break
     return result
-
-
 
 
 prime_1 = 1_000_000_007
@@ -245,7 +260,10 @@ prime1 = 1000000007
 prime2 = 1000004249
 x = random.randint(1, 10 ** 9)
 
-res = get_common_substring(text_1="aaabaa", text_2="baabbb", pattern_len=1, prime_1=prime_1, prime_2=prime_2, x=x, verbose=False)
+res = get_common_substring(text_1="aaabaa", text_2="baabbb", pattern_len=3, prime_1=prime_1, prime_2=prime_2, x=x,
+                           verbose=False)
+
+print("aaabaa", "baabbb")
 print(res)
 
 # for line in sys.stdin.readlines():
