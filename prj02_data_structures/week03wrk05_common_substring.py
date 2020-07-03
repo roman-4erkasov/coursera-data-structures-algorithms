@@ -145,7 +145,6 @@ class IntDict:
         if not found:
             self.data[h].append([key, value])
 
-
     def __str__(self):
         return "{" + " ".join([str(i) + ":" + str(x) for i, x in enumerate(self.data) if x]) + "}"
 
@@ -173,8 +172,8 @@ def get_common_substring(text_1, text_2, pattern_len, prime_1, prime_2, x, verbo
     result = None
     prime_3 = 1_000_000_007
 
-    if len(text_1) > len(text_2):
-        text_1, text_2 = text_2, text_1
+    # if len(text_1) > len(text_2):
+    #     text_1, text_2 = text_2, text_1
 
     hashes_t1_p1 = precompute_hashes(text_1, pattern_len, prime_1, x)
     hashes_t1_p2 = precompute_hashes(text_1, pattern_len, prime_2, x)
@@ -196,58 +195,78 @@ def get_common_substring(text_1, text_2, pattern_len, prime_1, prime_2, x, verbo
     return result
 
 
-prime_1 = 1_000_000_007
-prime_2 = 1_000_004_249
-
-"""
-Suppose you are given 2 string "aaaaa" & "aaa" , maximum it would be possible that smaller string is completely a common substring like in case above and that the idea we use.
-
-So we fix left=0 and right=min(string_A, string_B) = 3
-
-mid = 1 i.e (left+right)/2
-
-Now you try to find substring of length mid using hash. If it succeed, that mean we can at-least have a common substring of length 2,Lets see if we can get better , so in binary search because the substring search returned true left = mid + 1 and doing that we get mid =2, Repeat same process , and you will see SubStringSearch will still return , so again try i.e. now mid =3 and it will again succeed and like that we keep doing until left <=right
-
-SubStringSearch is a function which you have write that compute hash for each substring of length and for each index and then compare with other string 2.
-
-And all this have to be done fast, like you compute hash once and as explained in Problem 3 , you can use it to create hash for other index.
-
-
-"""
-
-"""
-def _binary_search(self):
-    l = 0
-    r = min(len(self.s1), len(self.s2))
-
-    while l <= r:
-        mid = (l + r) // 2
-
-        if self.compare_hashes(self.s1, self.s2, mid):
-            l = mid + 1
+def get_longest_common_substring(text_1, text_2):
+    prime_1 = 1_000_000_007
+    prime_2 = 1_000_004_249
+    x = random.randint(1, 10 ** 9)
+    left = 0
+    right = min(len(text_1), len(text_2))
+    while left <= right:
+        mid = left + (right - left) // 2
+        res = get_common_substring(
+            text_1=text_1, text_2=text_2,
+            pattern_len=mid,
+            prime_1=prime_1, prime_2=prime_2,
+            x=x
+        )
+        if res is None:
+            right = mid - 1
         else:
-            r = mid - 1
+            left = mid + 1
+    if right > 0:
+        result = get_common_substring(
+            text_1=text_1, text_2=text_2,
+            pattern_len=right,
+            prime_1=prime_1, prime_2=prime_2,
+            x=x
+        )
+    elif right == 0:
+        result = (0, 0, 0)
+    else:
+        msg = f"left={left} mid={mid} right={right}"
+        raise Exception(msg)
+    return result
 
-    return r
-"""
 
-# prime1 = 10 ** 9 + 7
-# prime2 = 10 ** 9 + 9
-prime1 = 1000000007
-prime2 = 1000004249
-x = random.randint(1, 10 ** 9)
+def test_get_longest_common_substring():
+    # text_1 = "aaabaa"
+    # text_2 = "baabbb"
 
-res = get_common_substring(text_1="aaabaa", text_2="baabbb", pattern_len=3, prime_1=prime_1, prime_2=prime_2, x=x,
-                           verbose=False)
+    # text_1 = "cool"
+    # text_2 = "toolbox"
 
-print("aaabaa", "baabbb")
-print(res)
+    # text_1 = "aaa"
+    # text_2 = "bb"
 
-# for line in sys.stdin.readlines():
-#     s, t = line.split()
-#     ans = solve_naive(s, t)
-#     print(ans.i, ans.j, ans.len)
+    # text_1 = "aabaa"
+    # text_2 = "babbaab"
 
+    text_1 = "voteforthegreatalbaniaforyou"
+    text_2 = "choosethegreatalbanianfuture"
+
+    res1 = get_longest_common_substring(text_1, text_2)
+    print(text_1, text_2)
+    print(res1)  # , res2)
+
+
+def main_naive():
+    # print("Print two string separated by space to continue or print Ctrl+D to exit...")
+    for line in sys.stdin.readlines():
+        s, t = line.split()
+        ans = solve_naive(s, t)
+        print(ans.i, ans.j, ans.len)
+
+
+def main():
+    # print("Print two string separated by space to continue or print Ctrl+D (Cmd+D for Mac) to exit...")
+    for line in sys.stdin.readlines():
+        s, t = line.split()
+        ans = get_longest_common_substring(s, t)
+        print(" ".join([str(x) for x in ans]))
+
+
+if __name__ == '__main__':
+    main()
 
 """
 input:
@@ -256,5 +275,7 @@ aaa bb
 aabaa babbaab
 
 output:
-
+1 1 3
+0 1 0
+0 4 3
 """
