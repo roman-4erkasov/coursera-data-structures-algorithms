@@ -60,6 +60,26 @@ class QueryProcessorNaive:
             self.process_query(self.read_query())
 
 
+class BitHashTable:
+    """
+    We use bits magic to implement direct addressing without memory problems
+    """
+    def __init__(self):
+        self.data = 0
+
+    def __setitem__(self, key, value):
+        mask = 1 << key
+        self.data &= ~mask #set 0 in a bit with index "key"
+        if value:
+            self.data |= mask
+
+    def __getitem__(self, item):
+        mask = 1 << item
+        if self.data & mask:
+            return 1
+        else:
+            return 0
+
 class QueryProcessor:
     _multiplier = 263
     _prime = 1000000007

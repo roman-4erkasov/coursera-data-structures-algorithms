@@ -86,71 +86,168 @@ def test_contains():
     )
 
 
-def
 
 
-def contains_common_substring(text_1, text_2, pattern_len, primes, x, verbose=False):
+# test_contains()
+
+
+# def get_common_substring(text1, text2):
+#     # TODO: binary search common substring
+#     # https://www.quora.com/How-do-I-use-rolling-hash-and-binary-search-to-find-the-longest-common-sub-string
+#     # https://www.coursera.org/learn/data-structures/discussions/weeks/3/threads/O0VDK7KqEemMUQoC5G__rA
+#     left = 0
+#     right = min(len(text1), len(text2))
+#
+#     while left<right:
+#         mid = left + (right-left)//2
+#         if contains()
+
+
+class IntDict:
     """
-    check if text contains pattern
-
-    :param text: text
-    :param pattern: substring
-    :param primes: list of prime number to generate different hashes
-    :param x: argument of polynoms for polyhash function
-    :return: True if text cntains substring, otherwise False
+    Hash Table that implemetns dict of integers
     """
-    # pattern_len = len(pattern)
-    result = False
-    # p_hashes = [
-    #     polyhash(pattern, prime, x)
-    #     for prime in primes
-    # ]
 
-    lil_hashes_1 = [
-        precompute_hashes(text_1, pattern_len, prime, x)
-        for prime in primes
-    ]
-    lil_hashes_2 = [
-        precompute_hashes(text_2, pattern_len, prime, x)
-        for prime in primes
-    ]
+    bucket_count = 100_000
 
-    if verbose:
-        print(f"lil_hashes:  {lil_hashes_1})\n  {lil_hashes_2}")
+    def __init__(self, prime, values=None):
+        self.prime = prime
+        self.a = random.randint(1, self.bucket_count - 1)
+        self.b = random.randint(0, self.bucket_count - 1)
+        self.data = [[] for _ in range(self.bucket_count)]
+        if values is not None:
+            self.multiple_add(values)
 
-    for hashes_1, hashes_2 in zip(lil_hashes_1, lil_hashes_2):
-        index_1 = 0
-        index_2 = 0
-        for index in range(min(len(text_1), len(text_2))):
-            if hashes_1[index] == hashes_2[index]:
+    @staticmethod
+    def __safe_modulo(value, modulus):
+        """
+        modulo operation that prevents from negative hashes
+        :param value:
+        :param modulus:
+        :return: remainder of modulo operation
+        """
+        return (value % modulus + modulus) % modulus
+
+    def __hash(self, value):
+        """
+        hash function from Universal Family
+        :param value: integer value
+        :return: hash of the integer
+        """
+        result = self.__safe_modulo(self.a * value + self.b, self.prime)
+        return self.__safe_modulo(result, self.bucket_count)
+
+    def exists(self, item: int):
+        h = self.__hash(item)
+        return item in self.data[h]
+
+    def __getitem__(self, item: int):
+        h = self.__hash(item)
+        result = None
+        for i, (k, v) in enumerate(self.data[h]):
+            if item == k:
+                result = v
+        return result
+
+    def __setitem__(self, key:int, value):
+        h = self.__hash(value)
+        found = False
+        for i, pair in enumerate(self.data[h]):
+            k, v = pair
+            if key == k:
+                found = True
+                self.data[h][i] = v
+        if not found:
+            self.data[h].append((key, value))
+
+    def add(self, value):
+        h = self.__hash(value)
+        if value not in self.data[h]:
+            self.data[h].append(value)
+
+    def multiple_add(self, values):
+        for value in values:
+            self.add(value)
+
+    def __str__(self):
+        return self.data
 
 
-    for i in range(0, len(text) - pattern_len + 1):
-        eq = True
-        for p_hash, hashes in zip(p_hashes, lil_hashes):
-            if p_hash != hashes[i]:
-                eq = False
-                break
-        if eq:
-            result = True
+def test_int_set():
+    h_table_1 = IntDict(prime_1)
+    h_table_1[3] = 1
+
+    print(h_table_1)
+    # assert h_table_1[3] == True
+    # assert h_table_1[2] == False
+
+
+def get_common_substring(text_1, text_2, pattern_len, prime_1, prime_2, x, verbose=False):
+    """
+    checks if text contains pattern
+    :param text_1:
+    :param text_2:
+    :param pattern_len:
+    :param prime_1:
+    :param prime_2:
+    :param x:
+    :param verbose:
+    :return:
+    """
+
+    result = None
+    prime_3 = 1_000_000_007
+
+    if len(text_1)>len(text_2):
+        text_1, text_2 = text_2, text_1
+
+    lil_t1_p1 = precompute_hashes(text_1, pattern_len, prime_1, x)
+    lil_t1_p2 = precompute_hashes(text_1, pattern_len, prime_2, x)
+
+    lil_t2_p1 = precompute_hashes(text_2, pattern_len, prime_1, x)
+    lil_t2_p2 = precompute_hashes(text_2, pattern_len, prime_2, x)
+
+    # primes that differ from prime of hash and differ from each other
+    hash_set_p1 = IntDict(prime=prime_2)
+    hash_set_p2 = IntDict(prime=prime_3)
+    for i in range(len(lil_t2_p1)):
+        hash_set_p1[i] = lil_t2_p1[i]
+        hash_set_p2[i] = lil_t2_p2[i]
+
+    for idx,(hash_p1, hash_p2) in enumerate(zip(lil_t1_p1, lil_t1_p2)):
+        if hash_set_p1.exists(hash_p1) and hash_set_p2.exists(hash_p2):
+            result = idx
             break
     return result
 
 
-test_contains()
+    # # if verbose:
+    # #     print(f"lil_hashes:  {lil_hashes_1})\n  {lil_hashes_2}")
+    #
+    # f
+    #
+    # for hashes_1, hashes_2 in zip(lil_hashes_1, lil_hashes_2):
+    #     index_1 = 0
+    #     index_2 = 0
+    #     for index in range(min(len(text_1), len(text_2))):
+    #         if hashes_1[index] == hashes_2[index]:
+    #
+    #
+    # for i in range(0, len(text) - pattern_len + 1):
+    #     eq = True
+    #     for p_hash, hashes in zip(p_hashes, lil_hashes):
+    #         if p_hash != hashes[i]:
+    #             eq = False
+    #             break
+    #     if eq:
+    #         result = True
+    #         break
+    # return result
 
 
-def get_common_substring(text1, text2):
-    # TODO: binary search common substring
-    # https://www.quora.com/How-do-I-use-rolling-hash-and-binary-search-to-find-the-longest-common-sub-string
-    # https://www.coursera.org/learn/data-structures/discussions/weeks/3/threads/O0VDK7KqEemMUQoC5G__rA
-    left = 0
-    right = min(len(text1), len(text2))
 
-    while left<right:
-        mid = left + (right-left)//2
-        if contains()
-
+prime_1 = 1_000_000_007
+prime_2 = 1_000_004_249
 
 """
 Suppose you are given 2 string "aaaaa" & "aaa" , maximum it would be possible that smaller string is completely a common substring like in case above and that the idea we use.
@@ -188,13 +285,16 @@ def _binary_search(self):
 # prime2 = 10 ** 9 + 9
 prime1 = 1000000007
 prime2 = 1000004249
-# x = random.randint(1, 10 ** 9)
-#
-#
+x = random.randint(1, 10 ** 9)
+
+res = get_common_substring(text_1="aaabaa", text_2="baabbb", pattern_len=1, prime_1=prime_1, prime_2=prime_2, x=x, verbose=False)
+print(res)
+
 # for line in sys.stdin.readlines():
 #     s, t = line.split()
 #     ans = solve_naive(s, t)
 #     print(ans.i, ans.j, ans.len)
+
 
 """
 input:
