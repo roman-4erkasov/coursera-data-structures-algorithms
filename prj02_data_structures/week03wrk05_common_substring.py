@@ -172,9 +172,6 @@ def get_common_substring(text_1, text_2, pattern_len, prime_1, prime_2, x, verbo
     result = None
     prime_3 = 1_000_000_007
 
-    # if len(text_1) > len(text_2):
-    #     text_1, text_2 = text_2, text_1
-
     hashes_t1_p1 = precompute_hashes(text_1, pattern_len, prime_1, x)
     hashes_t1_p2 = precompute_hashes(text_1, pattern_len, prime_2, x)
 
