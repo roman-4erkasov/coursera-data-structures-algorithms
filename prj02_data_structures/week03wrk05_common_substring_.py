@@ -1,6 +1,6 @@
 # python3
 
-#TODO:  https://iq.opengenus.org/longest-common-substring-using-rolling-hash/
+# TODO:  https://iq.opengenus.org/longest-common-substring-using-rolling-hash/
 import random
 import sys
 from collections import namedtuple
@@ -25,16 +25,40 @@ def polyhash(string, prime, x):
     return ans
 
 
-def precompute_hashes(text, pattern_len, prime, x):
+# class RollingHash:
+#     def __init__(self, text, prime, x):
+#         text_len = len(text)
+#         hashes = [None] * (text_len - pattern_len + 1)
+#         S = text[text_len - pattern_len:text_len]
+#         hashes[text_len - pattern_len] = polyhash(S, prime, x)
+#         y = 1
+#         for i in range(pattern_len):
+#             y = ((y * x) % prime + prime) % prime
+#
+#     def __call__(self, p):
+
+
+def get_powers(x, n, prime):
+    powers = [1]
+    y = 1
+    for i in range(n + 1):
+        y = ((y * x) % prime + prime) % prime
+        powers.append(y)
+    return powers
+
+
+def precompute_hashes(text, pattern_len, prime, x, x_pow):
     text_len = len(text)
     hashes = [None] * (text_len - pattern_len + 1)
     S = text[text_len - pattern_len:text_len]
     hashes[text_len - pattern_len] = polyhash(S, prime, x)
-    y = 1
-    for i in range(pattern_len):
-        y = ((y * x) % prime + prime) % prime
+    # y = 1
+    # for i in range(pattern_len):
+    #     y = ((y * x) % prime + prime) % prime
+    # for i in range(text_len - pattern_len - 1, -1, -1):
+    #     hashes[i] = ((x * hashes[i + 1] + ord(text[i]) - y * ord(text[i + pattern_len])) % prime + prime) % prime
     for i in range(text_len - pattern_len - 1, -1, -1):
-        hashes[i] = ((x * hashes[i + 1] + ord(text[i]) - y * ord(text[i + pattern_len])) % prime + prime) % prime
+        hashes[i] = ((x * hashes[i + 1] + ord(text[i]) - x_pow * ord(text[i + pattern_len])) % prime + prime) % prime
     return hashes
 
 
@@ -158,7 +182,7 @@ def test_int_set():
     print(h_table_1)
 
 
-def get_common_substring(text_1, text_2, pattern_len, prime_1, prime_2, x, verbose=False):
+def get_common_substring(text_1, text_2, pattern_len, prime_1, prime_2, x, x_pow_1, x_pow_2, verbose=False):
     """
     checks if text contains pattern
     :param text_1:
@@ -167,24 +191,25 @@ def get_common_substring(text_1, text_2, pattern_len, prime_1, prime_2, x, verbo
     :param prime_1:
     :param prime_2:
     :param x:
+    :param x_pow
     :param verbose:
     :return:
     """
 
     swap = False
 
-    if len(text_1)<len(text_2):
+    if len(text_1) < len(text_2):
         text_1, text_2 = text_2, text_1
         swap = True
 
-    result = None
+    result = 0, 0, 0
     prime_3 = 1_000_000_007
 
-    hashes_t1_p1 = precompute_hashes(text_1, pattern_len, prime_1, x)
-    hashes_t1_p2 = precompute_hashes(text_1, pattern_len, prime_2, x)
+    hashes_t1_p1 = precompute_hashes(text_1, pattern_len, prime_1, x, x_pow_1)
+    hashes_t1_p2 = precompute_hashes(text_1, pattern_len, prime_2, x, x_pow_2)
 
-    hashes_t2_p1 = precompute_hashes(text_2, pattern_len, prime_1, x)
-    hashes_t2_p2 = precompute_hashes(text_2, pattern_len, prime_2, x)
+    hashes_t2_p1 = precompute_hashes(text_2, pattern_len, prime_1, x, x_pow_1)
+    hashes_t2_p2 = precompute_hashes(text_2, pattern_len, prime_2, x, x_pow_2)
 
     # primes that differ from prime of hash and differ from each other
     hash_set_p1 = IntDict(prime=prime_2)
@@ -194,16 +219,21 @@ def get_common_substring(text_1, text_2, pattern_len, prime_1, prime_2, x, verbo
         hash_set_p2[hashes_t2_p2[i]] = i
 
     if verbose:
-        print(f"s1p1={hashes_t1_p1} s2p1={hash_set_p1}")
-        print(f"s1p2={hashes_t1_p2} s2p1={hash_set_p2}")
+        print(f"patt_len={pattern_len}")
+        print(f"  s1p1={hashes_t1_p1} s2p1={hash_set_p1}")
+        print(f"  s1p2={hashes_t1_p2} s2p1={hash_set_p2}")
 
     for idx, (hash_p1, hash_p2) in enumerate(zip(hashes_t1_p1, hashes_t1_p2)):
         if hash_set_p1.exists(hash_p1) and hash_set_p2.exists(hash_p2):
             result = idx, hash_set_p1[hash_p1], pattern_len
             break
-    if swap:
+    if swap and result is not None:
         a, b, c = result
-        result = a,c,b
+        result = b, a, c
+    if verbose:
+        print(f"res={result}")
+        print("=" * 40)
+        print()
     return result
 
 
@@ -213,25 +243,38 @@ def get_longest_common_substring(text_1, text_2, verbose=False):
     x = random.randint(1, 10 ** 9)
     left = 0
     right = min(len(text_1), len(text_2))
-    while left <= right:
-        mid = left + (right - left) // 2
+    powers_1 = get_powers(x=x, n=right, prime=prime_1)
+    powers_2 = get_powers(x=x, n=right, prime=prime_2)
+    while left < right:
+        mid = int(left + (right - left) / 2 + 0.5)
+        # mid = left + (right - left)//2
         res = get_common_substring(
             text_1=text_1, text_2=text_2,
             pattern_len=mid,
             prime_1=prime_1, prime_2=prime_2,
             x=x,
-            verbose=verbose
+            x_pow_1=powers_1[mid],
+            x_pow_2=powers_2[mid],
+            verbose=verbose,
         )
-        if res is None:
+        if verbose:
+            print(f"before: left={left} mid={mid} right={right} res={res}")
+        if res is None or res[2] == 0:
             right = mid - 1
         else:
-            left = mid + 1
+            left = mid
+        if verbose:
+            print(f"after: left={left} mid={mid} right={right} res={res}")
+    if verbose:
+        print(f"bsearch={right}")
     if right > 0:
         result = get_common_substring(
             text_1=text_1, text_2=text_2,
             pattern_len=right,
             prime_1=prime_1, prime_2=prime_2,
             x=x,
+            x_pow_1=powers_1[right],
+            x_pow_2=powers_2[right],
             verbose=verbose
         )
     elif right == 0:
@@ -275,7 +318,7 @@ def main():
     # print("Print two string separated by space to continue or print Ctrl+D (Cmd+D for Mac) to exit...")
     for line in sys.stdin.readlines():
         s, t = line.split()
-        ans = get_longest_common_substring(s, t)
+        ans = get_longest_common_substring(s, t, verbose=False)
         print(" ".join([str(x) for x in ans]))
 
 
