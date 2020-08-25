@@ -3,9 +3,9 @@ Data Structures and Algorithms specialisation from Coursera
 
 Website of the specialistion: https://www.coursera.org/specializations/data-structures-algorithms
 
-The spacialisation consists of the following courses:
+The specialisation consists of the following courses:
 
-## 1. Algorithimc Toolbox (done). The most imnteresting algorithms:
+## 1. Algorithimc Toolbox (done). The most interesting algorithms:
 - Modified QuickSort that solves some disadvantges of the classic QuickSort algorithm: https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj01_algorithmic_toolbox/week04wrk03_quick3.py
 - edit distance using dynamic programming https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj01_algorithmic_toolbox/week05wrk03_edit_distance.py
 - placing paretheses to maximise arythmetic expression https://github.com/roman-4erkasov/coursera-data-structures-algorithms/blob/master/prj01_algorithmic_toolbox/week06wrk03_placing_parentheses.py
